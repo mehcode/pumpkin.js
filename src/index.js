@@ -1,4 +1,4 @@
 module.exports = {
-  Form: require("./form"),
-  Field: require("./field")
+  Form: require("./form").default,
+  Field: require("./field").default
 }
