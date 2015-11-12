@@ -1,19 +1,11 @@
 import React from "react"
 
 export default class Form extends React.Component {
-  static propTypes = {
-    className: React.PropTypes.string,
-
-    // Callback for when the form is submitted successfully
-    onSubmit: React.PropTypes.func.isRequired,
-  }
-
-  static childContextTypes = {
-    form: React.PropTypes.object.isRequired
-  }
-
   constructor(props) {
     super(props)
+
+    // Bind onSubmit
+    this.onSubmit = this.onSubmit.bind(this)
 
     // Initialize state from the form properties
     this.state = props.form.getProps()
@@ -31,7 +23,7 @@ export default class Form extends React.Component {
     this.unlisten()
   }
 
-  onSubmit = (event) => {
+  onSubmit(event) {
     event.preventDefault()
 
     // Saving the form validates and calls the callback if successful
@@ -52,4 +44,15 @@ export default class Form extends React.Component {
       </form>
     )
   }
+}
+
+Form.propTypes = {
+  className: React.PropTypes.string,
+
+  // Callback for when the form is submitted successfully
+  onSubmit: React.PropTypes.func.isRequired,
+}
+
+Form.childContextTypes = {
+  form: React.PropTypes.object.isRequired
 }
