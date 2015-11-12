@@ -1,0 +1,30 @@
+{
+  "name": "pumpkin.js",
+  "version": "0.1.0",
+  "description": "Beautiful and reactive form component using Alt and React (at least until midnight).",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mehcode/pumpkin.js.git"
+  },
+  "keywords": [
+    "form",
+    "alt",
+    "react",
+    "component"
+  ],
+  "author": "Ryan Leckey",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mehcode/pumpkin.js/issues"
+  },
+  "homepage": "https://github.com/mehcode/pumpkin.js#readme",
+  "devDependencies": {
+    "babel": "^6.0.15",
+    "babel-preset-es2015": "^6.1.4",
+    "babel-preset-react": "^6.1.4"
+  },
+  "scripts": {
+    "build": "babel src --out-dir lib"
+  }
+}
