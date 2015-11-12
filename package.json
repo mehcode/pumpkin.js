@@ -1,6 +1,6 @@
 {
   "name": "pumpkin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Beautiful and reactive form component using Alt and React (at least until midnight).",
   "main": "lib/index.js",
   "repository": {
