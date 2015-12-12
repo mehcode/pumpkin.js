@@ -12,7 +12,22 @@ export default class Form extends React.Component {
   }
 
   getChildContext() {
-    return {form: this.state.props}
+    let form = this.state.props
+
+    // Attach atdl.
+    for (let key of Object.keys(form)) {
+      // Errors
+      if (this.props.errors && this.props.errors[key] != null) {
+        form[key].error = this.props.errors[key]
+      }
+
+      // Initial state
+      if (this.props.initialState && this.props.initialState[key] != null) {
+        form[key].defaultValue = this.props.initialState[key]
+      }
+    }
+
+    return {form}
   }
 
   componentDidMount() {
@@ -51,6 +66,12 @@ Form.propTypes = {
 
   // Callback for when the form is submitted successfully
   onSubmit: React.PropTypes.func.isRequired,
+
+  // Object of errors
+  errors: React.PropTypes.object,
+
+  // Initial state of the form
+  initialState: React.PropTypes.object,
 }
 
 Form.childContextTypes = {

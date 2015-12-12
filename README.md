@@ -10,5 +10,4 @@ $ npm install pumpkin
 ## Usage
 
 ```javascript
-
 ```
