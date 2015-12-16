@@ -59,11 +59,13 @@ export default class Field extends React.Component {
     if ((el.value == null || el.value.length === 0) &&
         (field.defaultValue != null && field.defaultValue.length > 0)) {
       el.value = field.defaultValue
-    }
 
-    // Adjust empty state
-    let empty = (el.value == null || el.value.length === 0)
-    this.setState({empty})
+      // Adjust empty state (if needed)
+      let empty = (el.value == null || el.value.length === 0)
+      if (empty !== this.state.empty) {
+        this.setState({empty})
+      }
+    }
   }
 
   render() {
