@@ -14,16 +14,23 @@ export default class Field extends React.Component {
       throw new Error(`Unknown field, '${props.name}', check form definition`)
     }
 
-    this.state = {focus: false, empty: field.value == null}
+    this.state = {focus: false, empty: field.value == null, modified: false}
   }
 
   onChangeForInput(event) {
     // Invoke the `onChange` form callback
     this.context.form[this.props.name].onChange(event)
 
-    // Adjust empty state
+    // Adjust empty state (if needed)
     let empty = (event.target.value == null || event.target.value.length === 0)
-    this.setState({empty})
+    if (empty !== this.state.empty) {
+      this.setState({empty})
+    }
+
+    // Adjust modified state
+    if (!this.state.modified) {
+      this.setState({modified: true})
+    }
   }
 
   onBlurForInput(event) {
@@ -53,17 +60,19 @@ export default class Field extends React.Component {
   }
 
   componentDidUpdate() {
-    // If we have a default value -- set it now
-    const field = this.context.form[this.props.name]
-    const el = this.refs.input
-    if ((el.value == null || el.value.length === 0) &&
-        (field.defaultValue != null && field.defaultValue.length > 0)) {
-      el.value = field.defaultValue
+    if (!this.state.modified) {
+      // If we have a default value -- set it now
+      const field = this.context.form[this.props.name]
+      const el = this.refs.input
+      if ((el.value == null || el.value.length === 0) &&
+          (field.defaultValue != null && field.defaultValue.length > 0)) {
+        el.value = field.defaultValue
 
-      // Adjust empty state (if needed)
-      let empty = (el.value == null || el.value.length === 0)
-      if (empty !== this.state.empty) {
-        this.setState({empty})
+        // Adjust empty state (if needed)
+        let empty = (el.value == null || el.value.length === 0)
+        if (empty !== this.state.empty) {
+          this.setState({empty})
+        }
       }
     }
   }
