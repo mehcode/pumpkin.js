@@ -22,8 +22,8 @@ export default class Form extends React.Component {
       }
 
       // Initial state
-      if (this.props.initialState && this.props.initialState[key] != null) {
-        form[key].defaultValue = this.props.initialState[key]
+      if (this.props.defaultValues && this.props.defaultValues[key] != null) {
+        form[key].defaultValue = this.props.defaultValues[key]
       }
     }
 
@@ -70,8 +70,8 @@ Form.propTypes = {
   // Object of errors
   errors: React.PropTypes.object,
 
-  // Initial state of the form
-  initialState: React.PropTypes.object,
+  // Default values for the forms' fields
+  defaultValues: React.PropTypes.object,
 }
 
 Form.childContextTypes = {

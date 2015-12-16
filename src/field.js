@@ -10,7 +10,11 @@ export default class Field extends React.Component {
     this.onChangeForInput = this.onChangeForInput.bind(this)
 
     const field = context.form[props.name]
-    this.state = {focus: false, empty: field.defaultValue == null}
+    if (field == null) {
+      throw new Error(`Unknown field, '${props.name}', check form definition`)
+    }
+
+    this.state = {focus: false, empty: field.value == null}
   }
 
   onChangeForInput(event) {
@@ -46,6 +50,20 @@ export default class Field extends React.Component {
 
     // Add the .has-focus className
     this.setState({focus: true})
+  }
+
+  componentDidUpdate() {
+    // If we have a default value -- set it now
+    const field = this.context.form[this.props.name]
+    const el = this.refs.input
+    if ((el.value == null || el.value.length === 0) &&
+        (field.defaultValue != null && field.defaultValue.length > 0)) {
+      el.value = field.defaultValue
+    }
+
+    // Adjust empty state
+    let empty = (el.value == null || el.value.length === 0)
+    this.setState({empty})
   }
 
   render() {
@@ -90,7 +108,7 @@ export default class Field extends React.Component {
       <div className={className}>
         {label}
         <input
-          ref={this.refs.input}
+          ref="input"
           name={this.props.name}
           type={this.props.type}
           onBlur={this.onBlurForInput}
