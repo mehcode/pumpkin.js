@@ -1,18 +1,18 @@
 import React from "react"
+import isArray from "lodash/lang/isArray"
 
 export default class Form extends React.Component {
   constructor(props) {
     super(props)
 
+    this.state = {state: {}}
+
     // Bind onSubmit
     this.onSubmit = this.onSubmit.bind(this)
-
-    // Initialize state from the form properties
-    this.state = props.form.getProps()
   }
 
   getChildContext() {
-    let form = this.state.props
+    let form = this.props.form.getProps().props
 
     // Attach atdl.
     for (let key of Object.keys(form)) {
@@ -25,13 +25,20 @@ export default class Form extends React.Component {
       if (this.props.defaultValues && this.props.defaultValues[key] != null) {
         form[key].defaultValue = this.props.defaultValues[key]
       }
+
+      // Current value
+      if (this.state.state[key]) {
+        form[key].value = this.state.state[key]
+      }
     }
 
     return {form}
   }
 
   componentDidMount() {
-    this.unlisten = this.props.form.store.listen(this.setState.bind(this))
+    this.unlisten = this.props.form.store.listen((state) => {
+      this.setState(state)
+    })
   }
 
   componentWillUnmount() {
@@ -42,7 +49,7 @@ export default class Form extends React.Component {
     event.preventDefault()
 
     // Saving the form validates and calls the callback if successful
-    this.state.save((err, state) => {
+    this.props.form.getProps().save((err, state) => {
       // TODO: Do something on errors // look into validation
 
       if (err == null) {

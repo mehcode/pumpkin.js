@@ -1,5 +1,8 @@
 import React from "react"
+import ReactDOM from "react-dom"
 import omit from "lodash/object/omit"
+import extend from "lodash/object/extend"
+import isEmpty from "lodash/lang/isEmpty"
 
 export default class Field extends React.Component {
   constructor(props, context) {
@@ -17,7 +20,22 @@ export default class Field extends React.Component {
     this.state = {focus: false, empty: field.value == null, modified: false}
   }
 
-  onChangeForInput(event) {
+  onChangeForInput(eventOrValue) {
+    let event
+    if (this.props.component != null) {
+      // Equate [] with null
+      if (isEmpty(eventOrValue)) {
+        eventOrValue = null
+      }
+
+      event = {target: {dataset: {}}}
+      event.target.value = eventOrValue
+      event.target.dataset.fluxKey = (
+        this.context.form[this.props.name]["data-flux-key"])
+    } else {
+      event = eventOrValue
+    }
+
     // Invoke the `onChange` form callback
     this.context.form[this.props.name].onChange(event)
 
@@ -60,21 +78,18 @@ export default class Field extends React.Component {
   }
 
   componentDidUpdate() {
-    if (!this.state.modified) {
       // If we have a default value -- set it now
       const field = this.context.form[this.props.name]
-      const el = this.refs.input
-      if ((el.value == null || el.value.length === 0) &&
-          (field.defaultValue != null && field.defaultValue.length > 0)) {
-        el.value = field.defaultValue
+      // if ((el.value == null || el.value.length === 0) &&
+      //     (field.defaultValue != null && field.defaultValue.length > 0)) {
+      //   el.value = field.defaultValue
 
-        // Adjust empty state (if needed)
-        let empty = (el.value == null || el.value.length === 0)
-        if (empty !== this.state.empty) {
-          this.setState({empty})
-        }
+      // Adjust empty state (if needed)
+      let empty = (field.value == null || field.value.length === 0)
+      if (empty !== this.state.empty) {
+        this.setState({empty})
       }
-    }
+      // }
   }
 
   render() {
@@ -115,9 +130,22 @@ export default class Field extends React.Component {
       )
     }
 
-    return (
-      <div className={className}>
-        {label}
+    if (!this.state.modified) {
+      field.value = field.defaultValue
+    }
+
+    let input
+    if (this.props.component) {
+      input = React.cloneElement(this.props.component, extend({
+        ref: "input",
+        name: this.props.name,
+        onBlur: this.onBlurForInput,
+        onFocus: this.onFocusForInput,
+        onChange: this.onChangeForInput,
+        placeholder: this.props.placeholder,
+      }, omit(field, ["onBlur", "onFocus", "onChange", "error"])))
+    } else {
+      input = (
         <input
           ref="input"
           name={this.props.name}
@@ -129,6 +157,13 @@ export default class Field extends React.Component {
           placeholder={this.props.placeholder}
           {...omit(field, ["onBlur", "onFocus", "onChange", "error"])}
           {...events} />
+      )
+    }
+
+    return (
+      <div className={className}>
+        {label}
+        {input}
         {error}
       </div>
     )
