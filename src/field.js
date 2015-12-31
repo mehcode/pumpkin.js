@@ -143,7 +143,7 @@ export default class Field extends React.Component {
         onFocus: this.onFocusForInput,
         onChange: this.onChangeForInput,
         placeholder: this.props.placeholder,
-      }, omit(field, ["onBlur", "onFocus", "onChange", "error"])))
+      }, omit(field, ["onBlur", "onFocus", "onChange", "error"]), events))
     } else {
       input = (
         <input
