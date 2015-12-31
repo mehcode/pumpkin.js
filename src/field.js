@@ -49,6 +49,11 @@ export default class Field extends React.Component {
     if (!this.state.modified) {
       this.setState({modified: true})
     }
+
+    // Invoke the `onChange` callback (if given)
+    if (this.props.onChange) {
+      this.props.onChange(event)
+    }
   }
 
   onBlurForInput(event) {
@@ -98,7 +103,8 @@ export default class Field extends React.Component {
     // Collect onX properties
     let events = {}
     for (let key of Object.keys(this.props)) {
-      if (key.startsWith("on") && ["onBlur", "onFocus"].indexOf(key) < 0) {
+      if (key.startsWith("on") && [
+          "onChange", "onBlur", "onFocus"].indexOf(key) < 0) {
         events[key] = this.props[key]
       }
     }
