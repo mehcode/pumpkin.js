@@ -36,6 +36,11 @@ export default class Field extends React.Component {
       event = eventOrValue
     }
 
+    // Invoke the `onChange` callback (if given)
+    if (this.props.onChange) {
+      this.props.onChange(event)
+    }
+
     // Invoke the `onChange` form callback
     this.context.form[this.props.name].onChange(event)
 
@@ -48,11 +53,6 @@ export default class Field extends React.Component {
     // Adjust modified state
     if (!this.state.modified) {
       this.setState({modified: true})
-    }
-
-    // Invoke the `onChange` callback (if given)
-    if (this.props.onChange) {
-      this.props.onChange(event)
     }
   }
 
