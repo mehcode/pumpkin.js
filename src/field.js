@@ -103,7 +103,7 @@ export default class Field extends React.Component {
     // Collect onX properties
     let events = {}
     for (let key of Object.keys(this.props)) {
-      if (key.startsWith("on") && [
+      if (key.indexOf("on") === 0 && [
           "onChange", "onBlur", "onFocus"].indexOf(key) < 0) {
         events[key] = this.props[key]
       }
